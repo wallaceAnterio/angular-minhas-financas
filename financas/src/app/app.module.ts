@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 // configuracao para requisição no backend fake
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api'
 import { InMemoryDatabase } from './in-memory-database';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { InMemoryDatabase } from './in-memory-database';
     CommonModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDatabase)
   ],
   providers: [],
