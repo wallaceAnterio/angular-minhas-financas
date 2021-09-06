@@ -6,12 +6,11 @@ import { Observable, throwError } from 'rxjs';
 
 import { Category } from './category.model';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiPath: string = "api/categories"
+  private apiPath: string = 'api/categories';
 
 
   constructor(
@@ -34,7 +33,6 @@ export class CategoryService {
       catchError(this.handleError),
       map(this.jsonDataToCategory)
     )
-
   }
 
   // Método responsável por criar uma categoria
