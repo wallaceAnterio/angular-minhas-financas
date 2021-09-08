@@ -20,7 +20,7 @@ export class Entry {
     reveneu: 'Receita'
   };
 
-  //Mostra se foi pago ou não
+  //Metodo que mostra se foi pago ou não
   get paidText(): string{
     return this.paid ? 'Pago' : 'Pendente'
   }

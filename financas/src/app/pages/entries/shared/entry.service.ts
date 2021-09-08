@@ -11,7 +11,7 @@ import { Entry } from './entry.model';
   providedIn: 'root'
 })
 export class EntryService {
-  private apiPath: string = 'api/categories';
+  private apiPath: string = "api/entries";
 
 
   constructor(
@@ -66,15 +66,24 @@ export class EntryService {
   // Metodos privados
   // converte um array de objeto json, para um array de objeto categories
   private jsonDataToEntries(jsonData: any[]): Entry[] {
+    // Exemplificando
+    console.log(jsonData[0] as Entry) // faz um casting, não exibe qual é o tipo do objeto. mesmo fazendo casting, continua sendo um objeto genérico
+    console.log(Object.assign(new Entry(), jsonData[0])) // retorna um objeto do tipo Entry, que foi instanciado e foi preenchido com os valores do objeto
+
+
     const entries: Entry[] = [];
-    jsonData.forEach(element => entries.push(element as Entry));
+
+    jsonData.forEach(element => {
+      const entry = Object.assign(new Entry(), element)// criando uma constante entry, contendo um Objeto "Entry", prenchido com os dados que vem do servidor
+      entries.push(entry)
+    });
     return entries;
   }
 
   // Converte um objeto json para um objeto categories
   // Não converte um array, retorna apenas uma categoria
   private jsonDataToEntry(jsonData: any): Entry {
-    return jsonData as Entry;
+    return Object.assign(new Entry(), jsonData);
   }
 
   private handleError(error: any): Observable<any> {
