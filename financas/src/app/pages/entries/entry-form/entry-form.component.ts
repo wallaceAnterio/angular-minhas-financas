@@ -5,7 +5,10 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 // Rotas
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Category } from './../../categories/shared/category.model';
 import { Entry } from './../shared/entry.model';
+
+import { CategoryService } from './../../categories/shared/category.service';
 import { EntryService } from '../shared/entry.service';
 
 import { switchMap } from 'rxjs/operators';
@@ -26,18 +29,45 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   serverErrorMessages: string[] = null;
   submittingForm: boolean = false // desativa o botao de enviar/salvar
   entry: Entry = new Entry();
+  categories: Array<Category>;
+
+  // configurando mascara
+  imaskConfig = {
+    mask: Number,
+    scale: 2, // 2 decimais depois da virgula
+    thousandsSeparator: '',
+    padFractionalZeros: true,
+    normalizeZeros: true,
+    radix: ','
+  }
+
+  // configura o idioma
+  ptBR = {
+    firstDayOfWeek: 0,
+    dayNames: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+    dayNamesShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+    dayNamesMin: ["Do", "Se", "Te", "Qu", "Qu", "Se", "Sa"],
+    monthNames: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
+     "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+    monthNamesShort: ["Jan", "Feb", "Mar", "Abr", "Mar", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    today: 'Hoje',
+    clear: 'Limpar'
+
+  }
 
   constructor(
     private entryService: EntryService,
     private activatRoute: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {
     this.setCurrentAction(); // verifica a ação atual
     this.buildEntryForm();// carrega o formulário de acordo com a ação em questão
-    this.loadCategory(); // carrega a categoria, de acordo com a ação em questão
+    this.loadEntry(); // carrega a categoria, de acordo com a ação em questão
+    this.loadCategories(); // carrega as categorias
   }
 
   ngAfterContentChecked(): void {
@@ -57,6 +87,19 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  // Método que retorna um array, com os campos já formatados
+ get typeOptions(): Array<any>{
+    return Object.entries(Entry.types).map(
+      ([value, text]) => {
+        return {
+          text: text,
+          value: value
+        }
+      }
+    )
+
+  }
+
   // MÈTODOS PRIVADOS
   // Define a ação atual do formulário
   private setCurrentAction() {
@@ -74,16 +117,16 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       id: [null],
       name: [null, [Validators.required, Validators.minLength(3)]],
       description: [null],
-      type: [null, [Validators.required]],
+      type: ["expense", [Validators.required]],
       amount: [null, [Validators.required]],
       date: [null, [Validators.required]],
-      paid: [null, [Validators.required]], // despesa ou receita
+      paid: [true, [Validators.required]], // despesa ou receita
       categoryId: [null, [Validators.required]],
 
     });
   }
 
-  private loadCategory() {
+  private loadEntry() {
     if (this.currentAction == 'edit') {
 
       this.activatRoute.paramMap.pipe(
@@ -96,6 +139,13 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
           this.entryForm.patchValue(entry) // setando os valores da categoria, para o formulário
         }, (error) => alert('Ocorreu um erro no servidor, tente mais tarde.'));
     }
+  }
+
+  // Carrega todas as categorias
+  private loadCategories(){
+    this.categoryService.getAll().subscribe(
+      retornoCategories => this.categories = retornoCategories
+    )
   }
 
   // Seta o titulo da página de acordo com a ação em questao
@@ -126,7 +176,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       .subscribe(
         category => this.actionsForSuccess(category),
         error => this.actionsForError(error)
-        )
+      )
   }
 
   private actionsForSuccess(entry?: Entry) {

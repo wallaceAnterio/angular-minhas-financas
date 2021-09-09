@@ -67,8 +67,8 @@ export class EntryService {
   // converte um array de objeto json, para um array de objeto categories
   private jsonDataToEntries(jsonData: any[]): Entry[] {
     // Exemplificando
-    console.log(jsonData[0] as Entry) // faz um casting, não exibe qual é o tipo do objeto. mesmo fazendo casting, continua sendo um objeto genérico
-    console.log(Object.assign(new Entry(), jsonData[0])) // retorna um objeto do tipo Entry, que foi instanciado e foi preenchido com os valores do objeto
+    // console.log(jsonData[0] as Entry) // faz um casting, não exibe qual é o tipo do objeto. mesmo fazendo casting, continua sendo um objeto genérico
+    // console.log(Object.assign(new Entry(), jsonData[0])) // retorna um objeto do tipo Entry, que foi instanciado e foi preenchido com os valores do objeto
 
 
     const entries: Entry[] = [];
