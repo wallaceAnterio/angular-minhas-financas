@@ -1,21 +1,22 @@
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { map, catchError, flatMap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Entry } from './entry.model';
 
+import { CategoryService } from './../../categories/shared/category.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EntryService {
-  private apiPath: string = "api/entries";
-
+  private apiPath: string = "api/entries"
 
   constructor(
     private http: HttpClient,
+    private categoryService: CategoryService
   ) { }
 
   // Lista todas as categorias
@@ -38,18 +39,35 @@ export class EntryService {
 
   // Método responsável por criar uma categoria
   create(entry: Entry): Observable<Entry> {
-    return this.http.post(this.apiPath, entry).pipe(
-      catchError(this.handleError),
-      map(this.jsonDataToEntry)
-    )
+    console.log(entry)
+    // fazendo associação de: lançamento com categoria
+    // só necessário se eu não tiver controle do retorno da api
+    return this.categoryService.getById(entry.categoryId).pipe(
+      flatMap(category => {
+        entry.category = category;
+
+        return this.http.post(this.apiPath, entry).pipe(
+          catchError(this.handleError),
+          map(this.jsonDataToEntry)
+        )
+      })
+      )
   }
 
   // Método responsável por atualizar uma categoria
   update(entry: Entry): Observable<Entry> {
     const url = `${this.apiPath}/${entry.id}`
-    return this.http.put(url, entry).pipe(
-      catchError(this.handleError),
-      map(() => entry) // retorna o objeto category
+
+    // fazendo associação de: lançamento com categoria
+    // só necessário se eu não tiver controle do retorno da api
+    return this.categoryService.getById(entry.categoryId).pipe(
+      flatMap(category => {
+        entry.category = category
+        return this.http.put(url, entry).pipe(
+          catchError(this.handleError),
+          map(() => entry) // retorna o objeto category
+        )
+      })
     )
   }
 

@@ -1,3 +1,4 @@
+import { CategoryService } from './../../categories/shared/category.service';
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
 
 // Formulario
@@ -8,7 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from './../../categories/shared/category.model';
 import { Entry } from './../shared/entry.model';
 
-import { CategoryService } from './../../categories/shared/category.service';
 import { EntryService } from '../shared/entry.service';
 
 import { switchMap } from 'rxjs/operators';
@@ -79,11 +79,11 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     this.submittingForm = true; // desbloquei o botão, ao enviar o formulário
 
     if (this.currentAction == "new") {
-      this.createCategory();
+      this.createEntry();
     }
     else {
       this.currentAction = "edit"
-      this.updateCategory();
+      this.updateEntry();
     }
   }
 
@@ -127,24 +127,24 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   }
 
   private loadEntry() {
-    if (this.currentAction == 'edit') {
+    if (this.currentAction == "edit") {
 
       this.activatRoute.paramMap.pipe(
-        switchMap(params => this.entryService.getById(+params.get('id')))
+        switchMap(params => this.entryService.getById(+params.get("id")))
 
-      )
+        )
         .subscribe((entry) => {
-          this.entry = entry
+          this.entry = entry;
           console.log(entry)
           this.entryForm.patchValue(entry) // setando os valores da categoria, para o formulário
         }, (error) => alert('Ocorreu um erro no servidor, tente mais tarde.'));
-    }
+      }
   }
 
   // Carrega todas as categorias
   private loadCategories(){
     this.categoryService.getAll().subscribe(
-      retornoCategories => this.categories = retornoCategories
+      retornoCAtegories => this.categories = retornoCAtegories
     )
   }
 
@@ -159,22 +159,22 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  private createCategory() {
+  private createEntry() {
     const entry: Entry = Object.assign(new Entry(), this.entryForm.value) // monta um objeto "category", de acordo com oque tem no formulário
 
     this.entryService.create(entry)// envia a categoia para o servidor, para ser criado uma categoria nova
       .subscribe(
-        category => this.actionsForSuccess(category),
+        entry => this.actionsForSuccess(entry),
         error => this.actionsForError(error)
       )
 
   }
-  private updateCategory() {
+  private updateEntry() {
     const entry: Entry = Object.assign(new Entry(), this.entryForm.value) // cria um objeto category preenchido de acordo com os dados que estão no formulário.
 
     this.entryService.update(entry)
       .subscribe(
-        category => this.actionsForSuccess(category),
+        entry => this.actionsForSuccess(entry),
         error => this.actionsForError(error)
       )
   }

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { map, catchError, flatMap } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { Category } from './category.model';
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiPath: string = 'api/categories';
+  private apiPath: string = 'api/categories/';
 
 
   constructor(
