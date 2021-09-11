@@ -82,12 +82,13 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       this.createEntry();
     }
     else {
-      this.currentAction = "edit"
+      // this.currentAction == "edit"
       this.updateEntry();
     }
   }
 
   // Método que retorna um array, com os campos já formatados
+  // definindo o tipo: receita / despesa
  get typeOptions(): Array<any>{
     return Object.entries(Entry.types).map(
       ([value, text]) => {

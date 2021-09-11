@@ -17,7 +17,7 @@ export class Entry {
   // Objeto que verifica se o tipo é despesa ou receita
   static types = {
     expense: 'Despesa',
-    reveneu: 'Receita'
+    revenue: 'Receita'
   };
 
   //Metodo que mostra se foi pago ou não

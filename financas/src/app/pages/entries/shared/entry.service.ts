@@ -40,7 +40,7 @@ export class EntryService {
   // Método responsável por criar uma categoria
   create(entry: Entry): Observable<Entry> {
     console.log(entry)
-    // fazendo associação de: lançamento com categoria
+    // fazendo associação de: lançamento/Entrada com categoria
     // só necessário se eu não tiver controle do retorno da api
     return this.categoryService.getById(entry.categoryId).pipe(
       flatMap(category => {
@@ -58,7 +58,7 @@ export class EntryService {
   update(entry: Entry): Observable<Entry> {
     const url = `${this.apiPath}/${entry.id}`
 
-    // fazendo associação de: lançamento com categoria
+    // fazendo associação de: lançamento/Entrada com categoria
     // só necessário se eu não tiver controle do retorno da api
     return this.categoryService.getById(entry.categoryId).pipe(
       flatMap(category => {
