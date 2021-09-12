@@ -185,8 +185,8 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     toastr.success("Solicitação processada com sucesso!")
 
     // redirecinamento/reload da pagina do componente
-    this.router.navigateByUrl("categories", { skipLocationChange: true }).then(
-      () => this.router.navigate(["categories", entry.id, "edit"]))// permanece na pagina de cadastro, porem com recurso de edição, já coms os dados cadastrados prontos para editar
+    this.router.navigateByUrl("entries", { skipLocationChange: true }).then(
+      () => this.router.navigate(["entries", entry.id, "edit"]))// permanece na pagina de cadastro, porem com recurso de edição, já coms os dados cadastrados prontos para editar
     console.log(entry)
 
 
